@@ -235,7 +235,7 @@ server.tool(
       const policyContent = {
         name,
         action,
-        version: "1.0",
+        version: 1,
         rules
       };
       const tempPath = path.join(os.tmpdir(), `ows-policy-${name}-${Date.now()}.json`);
