@@ -5,12 +5,25 @@ An MCP (Model Context Protocol) server that gives Claude access to the **Open Wa
 ## ✨ What Claude Can Do
 
 ```
-"Create a new wallet called 'trading-bot'"
-"Sign this message with my-wallet on Ethereum"
-"Show me all my wallets and their addresses"
-"Check the balance of trading-bot"
-"Create a spending policy that limits transactions to 0.1 ETH"
-"Show me the audit log of recent operations"
+### 1. Wallet Management
+- "Create a new wallet called 'ai-assistant'"
+- "List all the wallets we have created so far"
+- "Show me the Solana, Ethereum, and SUI addresses for 'hackathon-demo' in a table"
+
+### 2. Secure Signing
+- "Sign the message 'Joining OWS Hackathon 2026' on Ethereum using 'hackathon-demo' and show me the signature"
+- "Sign this raw transaction payload on the Solana network using 'ai-assistant'"
+
+### 3. Monitoring & Audits
+- "Show me today's audit log. Were any transactions rejected or rate-limited?"
+- "Check the current session status and how much spend limit we have left"
+
+### 4. Security & Policies
+- "Create a new agent policy that limits spending to a maximum of 0.1 ETH per day"
+- "List current API keys and revoke any that are unused"
+
+### 🔥 Full Autonomous Agent Flow
+- "Please check my wallets. If 'trading-bot' doesn't exist, create it. Then get its Ethereum address and sign the message 'Bot active and listening'. Finally, check the Audit Log and report if the last 3 operations were successful."
 ```
 
 ## 🏗️ Architecture
