@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "ows-wallet": {
+      "command": "node",
+      "args": ["C:/Users/mcoba/OneDrive/Desktop/OWS/dist/index.js"],
+      "env": {
+        "OWS_CLI_PATH": "C:/Users/mcoba/.ows/bin/ows.exe",
+        "OWS_PASSWORD": "",
+        "OWS_RATE_LIMIT": "30",
+        "OWS_MAX_TX": "50",
+        "OWS_MAX_SPEND": "1.0",
+        "OWS_SESSION_DURATION": "3600000"
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "name": "ows-mcp-wallet-server",
+  "version": "1.0.0",
+  "description": "MCP Wallet Server for Claude — Expose OWS signing via the Model Context Protocol",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "ows-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "test": "node dist/index.js --test"
+  },
+  "keywords": [
+    "mcp",
+    "ows",
+    "open-wallet-standard",
+    "claude",
+    "ai-agent",
+    "wallet",
+    "blockchain",
+    "crypto"
+  ],
+  "author": "kaos35",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "zod": "^3.24.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.2",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  }
+}

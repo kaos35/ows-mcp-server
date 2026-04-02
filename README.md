@@ -1,0 +1,183 @@
+# 🔐 OWS MCP Wallet Server for Claude
+
+> **Challenge #6 — MCP Wallet Server for Claude**
+> OWS Hackathon | April 3, 2026
+
+An MCP (Model Context Protocol) server that gives Claude access to the **Open Wallet Standard (OWS)** — enabling AI agents to create wallets, sign transactions, manage policies, and check balances across 10 blockchains through natural language.
+
+## ✨ What Claude Can Do
+
+```
+"Create a new wallet called 'trading-bot'"
+"Sign this message with my-wallet on Ethereum"
+"Show me all my wallets and their addresses"
+"Check the balance of trading-bot"
+"Create a spending policy that limits transactions to 0.1 ETH"
+"Show me the audit log of recent operations"
+```
+
+## 🏗️ Architecture
+
+```
+┌──────────────────────────────────────────────┐
+│                  Claude Desktop               │
+│         (Natural Language Interface)          │
+└─────────────────┬────────────────────────────┘
+                  │ MCP Protocol (stdio)
+┌─────────────────▼────────────────────────────┐
+│          OWS MCP Wallet Server               │
+│  ┌────────────────────────────────────────┐  │
+│  │         14 MCP Tools                   │  │
+│  │  Wallet · Sign · Policy · Keys · Fund  │  │
+│  └────────────────┬───────────────────────┘  │
+│  ┌────────────────▼───────────────────────┐  │
+│  │         Middleware Layer               │  │
+│  │  Rate Limiter · Spending Guard · Audit │  │
+│  └────────────────┬───────────────────────┘  │
+└─────────────────┬────────────────────────────┘
+                  │ CLI / SDK
+┌─────────────────▼────────────────────────────┐
+│          OWS Core (Rust + FFI)               │
+│  ┌──────────┐  ┌──────────┐  ┌───────────┐  │
+│  │  Policy   │  │ Signing  │  │  Wallet   │  │
+│  │  Engine   │  │  Core    │  │  Vault    │  │
+│  └──────────┘  └──────────┘  └───────────┘  │
+│              ~/.ows/wallets/                 │
+└──────────────────────────────────────────────┘
+```
+
+## 🔧 14 MCP Tools
+
+| Category | Tool | Description |
+|----------|------|-------------|
+| **Wallet** | `ows_wallet_create` | Create multi-chain wallet (10 chains from 1 seed) |
+| | `ows_wallet_list` | List all local wallets |
+| | `ows_wallet_info` | Get addresses & metadata |
+| **Signing** | `ows_sign_message` | Sign arbitrary messages |
+| | `ows_sign_transaction` | Sign raw transactions |
+| **Policy** | `ows_policy_create` | Create spending/signing policies |
+| | `ows_policy_list` | List active policies |
+| **Keys** | `ows_key_create` | Create scoped API keys |
+| | `ows_key_list` | List API keys |
+| | `ows_key_revoke` | Revoke API keys |
+| **Funding** | `ows_get_balance` | Check wallet balance |
+| | `ows_fund_deposit` | Fund wallet |
+| **Monitor** | `ows_audit_log` | View operation audit trail |
+| | `ows_session_status` | Check limits & session info |
+
+## 🛡️ Security Features
+
+- **Zero key exposure** — Private keys never leave the OWS vault
+- **Rate limiting** — Configurable calls/minute per tool
+- **Spending guards** — Per-session transaction count & spend caps
+- **Audit logging** — Every operation logged to `~/.ows/audit/`
+- **Policy engine** — Pre-signing rules evaluated before any key material is touched
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 20+
+- OWS CLI installed (`npm install -g @open-wallet-standard/core`)
+
+### Install & Build
+
+```bash
+cd OWS
+npm install
+npm run build
+```
+
+### Connect to Claude Desktop
+
+1. Copy the example config:
+```bash
+# Windows
+copy claude_desktop_config.example.json %APPDATA%\Claude\claude_desktop_config.json
+
+# macOS
+cp claude_desktop_config.example.json ~/Library/Application\ Support/Claude/claude_desktop_config.json
+```
+
+2. Update the path in the config to match your installation:
+```json
+{
+  "mcpServers": {
+    "ows-wallet": {
+      "command": "node",
+      "args": ["C:/Users/mcoba/OneDrive/Desktop/OWS/dist/index.js"]
+    }
+  }
+}
+```
+
+3. Restart Claude Desktop
+
+4. Try it out:
+> "Create a wallet called hackathon-demo and show me its addresses"
+
+### Development Mode
+
+```bash
+npm run dev
+```
+
+## ⚙️ Configuration (Environment Variables)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `OWS_CLI_PATH` | `ows` | Path to OWS CLI binary |
+| `OWS_PASSWORD` | *(empty)* | Wallet encryption password |
+| `OWS_RATE_LIMIT` | `30` | Max tool calls per minute |
+| `OWS_MAX_TX` | `50` | Max transactions per session |
+| `OWS_MAX_SPEND` | `1.0` | Max spend per session (native token) |
+| `OWS_SESSION_DURATION` | `3600000` | Session duration (ms) |
+| `OWS_AUDIT_DIR` | `~/.ows/audit` | Audit log directory |
+
+## 🔗 Supported Chains
+
+| Chain | Derivation Path | Address Format |
+|-------|----------------|----------------|
+| EVM (ETH, Base, Arbitrum) | `m/44'/60'/0'/0/0` | 0x... |
+| Solana | `m/44'/501'/0'/0'` | Base58 |
+| Bitcoin | `m/84'/0'/0'/0/0` | bc1... |
+| Cosmos | `m/44'/118'/0'/0/0` | cosmos1... |
+| Tron | `m/44'/195'/0'/0/0` | T... |
+| TON | `m/44'/607'/0'` | EQ... |
+| Sui | `m/44'/784'/0'/0'/0'` | 0x... |
+| Filecoin | `m/44'/461'/0'/0/0` | f1... |
+| XRP Ledger | `m/44'/144'/0'/0/0` | r... |
+| Spark | `m/84'/0'/0'/0/0` | sp1... |
+
+## 📁 Project Structure
+
+```
+OWS/
+├── src/
+│   ├── index.ts                 # MCP Server (14 tools)
+│   ├── utils/
+│   │   ├── owsExecutor.ts       # OWS CLI wrapper
+│   │   └── formatters.ts        # Response formatters
+│   └── middleware/
+│       ├── rateLimiter.ts        # Rate limiting
+│       ├── spendingGuard.ts      # Spending caps
+│       └── auditLog.ts           # Audit logging
+├── claude_desktop_config.example.json
+├── package.json
+├── tsconfig.json
+└── README.md
+```
+
+## 🏆 Hackathon Submission
+
+**Challenge:** #6 — MCP Wallet Server for Claude
+**Track:** Tooling & Infrastructure
+**Author:** [kaos35](https://github.com/kaos35) (venus) — [@0xvenusdev](https://x.com/0xvenusdev)
+
+Built with:
+- [Open Wallet Standard](https://openwallet.sh) — Secure local wallet management
+- [Model Context Protocol](https://modelcontextprotocol.io) — AI tool integration
+- [Claude](https://claude.ai) — AI assistant
+
+## 📄 License
+
+MIT © 2026 kaos35
