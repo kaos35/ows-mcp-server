@@ -155,8 +155,7 @@ export async function getBalance(wallet: string): Promise<OWSResult> {
 
 export async function fundDeposit(
   wallet: string,
-  chain: string,
-  amount: string
+  chain: string
 ): Promise<OWSResult> {
   return execOWS([
     "fund",
@@ -165,8 +164,6 @@ export async function fundDeposit(
     wallet,
     "--chain",
     chain,
-    "--amount",
-    amount,
   ]);
 }
 
@@ -180,23 +177,16 @@ export async function generateMnemonic(): Promise<OWSResult> {
 
 export async function fundViaMoonpay(
   wallet: string,
-  chain: string,
-  amount: string,
-  currency: string
+  chain: string
 ): Promise<OWSResult> {
-  // Uses the native fund command configured to trigger the Moonpay flow
+  // Uses the native fund command which triggers Moonpay auto-convert deposit
   return execOWS([
     "fund",
-    "--provider",
-    "moonpay",
+    "deposit",
     "--wallet",
     wallet,
     "--chain",
     chain,
-    "--amount",
-    amount,
-    "--currency",
-    currency,
   ]);
 }
 

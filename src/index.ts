@@ -327,7 +327,7 @@ server.tool(
           isError: true,
         };
       }
-      const result = await fundDeposit(wallet, chain, amount);
+      const result = await fundDeposit(wallet, chain);
       return autoFormat(result, `Funded '${wallet}' with ${amount} on ${chain}`, `Failed to fund wallet`);
     }, { wallet, chain });
   }
@@ -348,7 +348,7 @@ server.tool(
   },
   async ({ wallet, chain, amount, currency }) => {
     return guardedExec("ows_moonpay_buy_crypto", { wallet, chain, amount, currency }, async () => {
-      const result = await fundViaMoonpay(wallet, chain, amount, currency);
+      const result = await fundViaMoonpay(wallet, chain);
       return autoFormat(result, `Successfully initiated MoonPay funding for ${amount} ${currency.toUpperCase()} to '${wallet}' on ${chain}. Please check the provided URL to complete the purchase.`, `Failed to initiate MoonPay checkout`);
     }, { wallet, chain });
   }
