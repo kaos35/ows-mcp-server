@@ -236,7 +236,8 @@ server.tool(
         id: name,
         name: name,
         executable: executable,
-        action: action
+        action: action,
+        version: 1
       };
       const tempPath = path.join(os.tmpdir(), `ows-policy-${name}-${Date.now()}.json`);
       await fs.writeFile(tempPath, JSON.stringify(policyContent, null, 2), "utf8");
