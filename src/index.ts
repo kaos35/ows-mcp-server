@@ -233,6 +233,7 @@ server.tool(
     return guardedExec("ows_policy_create", { name, action }, async () => {
       // Create a temporary JSON file for the policy
       const policyContent = {
+        id: name,
         name,
         action,
         version: 1,
