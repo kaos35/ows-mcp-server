@@ -1,8 +1,5 @@
 # 🔐 OWS MCP Wallet Server for Claude
 
-> **Challenge #6 — MCP Wallet Server for Claude**
-> OWS Hackathon | April 3, 2026
-
 An MCP (Model Context Protocol) server that gives Claude access to the **Open Wallet Standard (OWS)** — enabling AI agents to create wallets, sign transactions, manage policies, and check balances across 10 blockchains through natural language.
 
 ## ✨ What Claude Can Do
@@ -166,12 +163,6 @@ OWS/
 ├── tsconfig.json
 └── README.md
 ```
-
-## 🏆 Hackathon Submission
-
-**Challenge:** #6 — MCP Wallet Server for Claude
-**Track:** Tooling & Infrastructure
-**Author:** [kaos35](https://github.com/kaos35) (venus) — [@0xvenusdev](https://x.com/0xvenusdev)
 
 Built with:
 - [Open Wallet Standard](https://openwallet.sh) — Secure local wallet management
