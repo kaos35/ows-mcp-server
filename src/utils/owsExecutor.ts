@@ -102,19 +102,13 @@ export async function signTransaction(
 // ─── Policy Operations ───────────────────────────────────────
 
 export async function createPolicy(
-  name: string,
-  executable: string,
-  action: "deny" | "warn" = "deny"
+  filePath: string
 ): Promise<OWSResult> {
   return execOWS([
     "policy",
     "create",
-    "--name",
-    name,
-    "--executable",
-    executable,
-    "--action",
-    action,
+    "--file",
+    filePath,
   ]);
 }
 

@@ -14,6 +14,9 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
+import * as fs from "fs/promises";
+import * as path from "path";
+import * as os from "os";
 
 // ─── OWS Executor ─────────────────────────────────────────────
 import {
@@ -223,12 +226,26 @@ server.tool(
   "Create a new OWS signing policy. Policies are evaluated before any key material is touched — they can enforce spending limits, contract allowlists, and chain restrictions.",
   {
     name: z.string().min(1).describe("Policy name"),
-    executable: z.string().min(1).describe("Absolute path to the policy executable script"),
-    action: z.enum(["deny", "warn"]).default("deny").describe("Action when policy fails: 'deny' blocks signing, 'warn' logs but allows"),
+    rules: z.array(z.any()).describe("List of robust policy rules formatted as JSON objects"),
+    action: z.enum(["deny", "warn"]).default("deny").describe("Action when policy fails"),
   },
-  async ({ name, executable, action }) => {
+  async ({ name, rules, action }) => {
     return guardedExec("ows_policy_create", { name, action }, async () => {
-      const result = await createPolicy(name, executable, action);
+      // Create a temporary JSON file for the policy
+      const policyContent = {
+        name,
+        action,
+        version: "1.0",
+        rules
+      };
+      const tempPath = path.join(os.tmpdir(), `ows-policy-${name}-${Date.now()}.json`);
+      await fs.writeFile(tempPath, JSON.stringify(policyContent, null, 2), "utf8");
+      
+      const result = await createPolicy(tempPath);
+      
+      // Cleanup temp file
+      try { await fs.unlink(tempPath); } catch (e) {}
+
       return autoFormat(result, `Policy '${name}' created (action: ${action})`, `Failed to create policy`);
     });
   }
