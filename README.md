@@ -195,11 +195,6 @@ As the core MCP integration is completed, this architecture is perfectly positio
 *   **🔍 The Observatory (Onchain Intelligence)**
     *   `ows_risk_screener`: Feeding Allium data into Claude before any `ows_sign_transaction` is executed to proactively prevent interaction with malicious contracts.
 
-## 🏆 Hackathon Submission
-
-**Challenge:** #6 — MCP Wallet Server for Claude
-**Track:** Tooling & Infrastructure
-**Author:** [kaos35](https://github.com/kaos35)
 
 Built with:
 - [Open Wallet Standard](https://openwallet.sh) — Secure local wallet management
