@@ -175,3 +175,41 @@ export async function fundDeposit(
 export async function generateMnemonic(): Promise<OWSResult> {
   return execOWS(["mnemonic", "generate"]);
 }
+
+// ─── Expansion Operations (Moonpay & Bridge) ─────────────────
+
+export async function fundViaMoonpay(
+  wallet: string,
+  chain: string,
+  amount: string,
+  currency: string
+): Promise<OWSResult> {
+  // Uses the native fund command configured to trigger the Moonpay flow
+  return execOWS([
+    "fund",
+    "--provider",
+    "moonpay",
+    "--wallet",
+    wallet,
+    "--chain",
+    chain,
+    "--amount",
+    amount,
+    "--currency",
+    currency,
+  ]);
+}
+
+export async function crossChainBridge(
+  wallet: string,
+  sourceChain: string,
+  targetChain: string,
+  amount: string
+): Promise<OWSResult> {
+  // Mock bridging process for hackathon demo purposes
+  // In production, this would call DeBridge or SquidRouter API, then use execOWS(["sign", "tx", ...])
+  return {
+    success: true,
+    data: `✅ [MOCK] Successfully initiated cross-chain bridge.\nWallet: ${wallet}\nAmount: ${amount}\nRoute: ${sourceChain} -> ${targetChain}\nEstimated Time: ~2 minutes\nTxHash: 0x${Math.random().toString(16).slice(2, 10)}...`,
+  };
+}

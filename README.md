@@ -56,7 +56,7 @@ An MCP (Model Context Protocol) server that gives Claude access to the **Open Wa
 └──────────────────────────────────────────────┘
 ```
 
-## 🔧 14 MCP Tools
+## 🔧 16 MCP Tools
 
 | Category | Tool | Description |
 |----------|------|-------------|
@@ -70,8 +70,10 @@ An MCP (Model Context Protocol) server that gives Claude access to the **Open Wa
 | **Keys** | `ows_key_create` | Create scoped API keys |
 | | `ows_key_list` | List API keys |
 | | `ows_key_revoke` | Revoke API keys |
-| **Funding** | `ows_get_balance` | Check wallet balance |
-| | `ows_fund_deposit` | Fund wallet |
+| **Funding/DeFi** | `ows_get_balance` | Check wallet balance |
+| | `ows_fund_deposit` | Fund wallet with crypto |
+| | `ows_moonpay_buy_crypto` | Buy crypto via MoonPay |
+| | `ows_cross_chain_bridge` | Bridge assets across networks |
 | **Monitor** | `ows_audit_log` | View operation audit trail |
 | | `ows_session_status` | Check limits & session info |
 

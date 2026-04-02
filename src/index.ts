@@ -30,6 +30,8 @@ import {
   getBalance,
   fundDeposit,
   generateMnemonic,
+  fundViaMoonpay,
+  crossChainBridge,
 } from "./utils/owsExecutor.js";
 
 // ─── Middleware ───────────────────────────────────────────────
@@ -332,6 +334,44 @@ server.tool(
 );
 
 // ═══════════════════════════════════════════════════════════════
+// EXPANSION TOOLS (DEFI & BRIDGE)
+// ═══════════════════════════════════════════════════════════════
+
+server.tool(
+  "ows_moonpay_buy_crypto",
+  "Buy cryptocurrency using Fiat via MoonPay and deposit it directly into the specified OWS wallet.",
+  {
+    wallet: z.string().min(1).describe("Wallet name to fund"),
+    chain: chainEnum.describe("Target blockchain (e.g. 'solana', 'evm')"),
+    amount: z.string().min(1).describe("Amount of Fiat to spend (e.g. '50')"),
+    currency: z.string().default("usd").describe("Fiat currency to use (e.g. 'usd', 'eur')"),
+  },
+  async ({ wallet, chain, amount, currency }) => {
+    return guardedExec("ows_moonpay_buy_crypto", { wallet, chain, amount, currency }, async () => {
+      const result = await fundViaMoonpay(wallet, chain, amount, currency);
+      return autoFormat(result, `Successfully initiated MoonPay funding for ${amount} ${currency.toUpperCase()} to '${wallet}' on ${chain}. Please check the provided URL to complete the purchase.`, `Failed to initiate MoonPay checkout`);
+    }, { wallet, chain });
+  }
+);
+
+server.tool(
+  "ows_cross_chain_bridge",
+  "Bridge assets from one blockchain to another via a cross-chain liquidity protocol (Mocked Demo).",
+  {
+    wallet: z.string().min(1).describe("Wallet to use for bridging"),
+    sourceChain: chainEnum.describe("Blockchain the assets are currently on"),
+    targetChain: chainEnum.describe("Blockchain to receive the assets"),
+    amount: z.string().min(1).describe("Amount to bridge"),
+  },
+  async ({ wallet, sourceChain, targetChain, amount }) => {
+    return guardedExec("ows_cross_chain_bridge", { wallet, sourceChain, targetChain, amount }, async () => {
+      const result = await crossChainBridge(wallet, sourceChain, targetChain, amount);
+      return autoFormat(result, `Bridge initiated: ${amount} from ${sourceChain} to ${targetChain}`, `Bridge failed`);
+    }, { wallet });
+  }
+);
+
+// ═══════════════════════════════════════════════════════════════
 // MONITORING & AUDIT TOOLS
 // ═══════════════════════════════════════════════════════════════
 
@@ -421,7 +461,7 @@ async function main() {
 
   // Log startup to stderr (stdout is reserved for MCP protocol)
   console.error("🔐 OWS MCP Wallet Server started");
-  console.error("   14 tools registered");
+  console.error("   16 tools registered");
   console.error(`   Supported chains: ${SUPPORTED_CHAINS.join(", ")}`);
   console.error("   Ready for Claude Desktop connection");
 }
