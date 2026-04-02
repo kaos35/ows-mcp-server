@@ -179,6 +179,28 @@ OWS/
 └── README.md
 ```
 
+## 🔮 Roadmap & Future Features (OWS Tracks Alignment)
+
+As the core MCP integration is completed, this architecture is perfectly positioned to scale into the 5 core OWS Tracks:
+
+*   **⚡ The Exchange (Autonomous Trading)**
+    *   `ows_copy_trade`: Autonomous LLM-based execution of copy-trading signals without human intervention.
+    *   `ows_liquidity_vault`: Deploying and pooling liquidity on Myriad AMMs based on real-time LLM market sentiment.
+*   **🌐 The Grid (Cross-chain Infrastructure)**
+    *   `ows_cross_chain_bridge` *(Currently mocked)*: Native integration with Squid/DeBridge routing so Claude can auto-select the cheapest path across the 10+ supported chains.
+*   **💬 The Network (Agent-to-Agent)**
+    *   `ows_xmtp_send`: Integration with XMTP so Claude can negotiate professional service contracts and settle payments directly with other agents.
+*   **🤝 The Commons (Group Capital)**
+    *   `ows_investment_club`: Multi-user signers where Claude orchestrates voting and tracking metrics for programmable on-chain investment clubs.
+*   **🔍 The Observatory (Onchain Intelligence)**
+    *   `ows_risk_screener`: Feeding Allium data into Claude before any `ows_sign_transaction` is executed to proactively prevent interaction with malicious contracts.
+
+## 🏆 Hackathon Submission
+
+**Challenge:** #6 — MCP Wallet Server for Claude
+**Track:** Tooling & Infrastructure
+**Author:** [kaos35](https://github.com/kaos35)
+
 Built with:
 - [Open Wallet Standard](https://openwallet.sh) — Secure local wallet management
 - [Model Context Protocol](https://modelcontextprotocol.io) — AI tool integration
