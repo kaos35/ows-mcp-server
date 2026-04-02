@@ -226,18 +226,17 @@ server.tool(
   "Create a new OWS signing policy. Policies are evaluated before any key material is touched — they can enforce spending limits, contract allowlists, and chain restrictions.",
   {
     name: z.string().min(1).describe("Policy name"),
-    rules: z.array(z.any()).describe("List of robust policy rules formatted as JSON objects"),
+    executable: z.string().min(1).describe("Absolute path to the policy executable script"),
     action: z.enum(["deny", "warn"]).default("deny").describe("Action when policy fails"),
   },
-  async ({ name, rules, action }) => {
+  async ({ name, executable, action }) => {
     return guardedExec("ows_policy_create", { name, action }, async () => {
-      // Create a temporary JSON file for the policy
+      // Create a temporary JSON file for the policy matching OWS spec
       const policyContent = {
         id: name,
-        name,
-        action,
-        version: 1,
-        rules
+        name: name,
+        executable: executable,
+        action: action
       };
       const tempPath = path.join(os.tmpdir(), `ows-policy-${name}-${Date.now()}.json`);
       await fs.writeFile(tempPath, JSON.stringify(policyContent, null, 2), "utf8");
